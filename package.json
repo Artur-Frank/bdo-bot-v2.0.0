@@ -1,0 +1,16 @@
+{
+  "name": "bdo-bot",
+  "version": "2.0.0",
+  "description": "Discord music bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Artur Frank",
+  "license": "MIT",
+  "dependencies": {
+    "easyvk": "^2.6.1",
+    "fs": "0.0.1-security",
+    "readline": "^1.3.0"
+  }
+}
