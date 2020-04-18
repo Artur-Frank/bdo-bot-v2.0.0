@@ -30,7 +30,6 @@ async function main(vk) {
 		client.on("ready", () => {
 			console.log(`%cBot has started, with ${client.users.cache.size} users, in ${client.channels.cache.size} channels of ${client.guilds.cache.size} guilds.`, 'color: orange');
 			client.user.setActivity(`Black Desert Online`);
-			///client.commands.get("notification").execute(client);
 		});
 
 		client.on("guildCreate", guild => {
@@ -43,9 +42,11 @@ async function main(vk) {
 			client.user.setActivity(`Black Desert Online`);
 		});
 
-		client.on("guildMemberUpdate", (oldMember, newMember) => {
-			client.commands.get("licence").execute(client, oldMember, newMember);
-		})
+		/*
+			client.on("guildMemberUpdate", (oldMember, newMember) => {
+				client.commands.get("licence").execute(client, oldMember, newMember);
+			})
+		*/
 
 		client.on("message", async message => {
 			if (message.author.bot) return;

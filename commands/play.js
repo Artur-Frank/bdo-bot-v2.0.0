@@ -3,8 +3,16 @@ const music = require('../module/music');
 
 module.exports = {
     name: "play",
-    description: "Воспроизведение музыки на канале",
-    instruction: "",
+    description: "Воспроизведение музыки",
+    instruction:                                                                
+    `Данная   команда   воспроизводит   музыку   с   VK   и   YouTube
+     для запуска требуется ввести команду в формате : **${config.prefix}play [url]**
+     * **[url]** -  ссылка  на  альбом  или  личные  аудиозаписи  VK  или
+     ссылка    на    YouTube
+     
+     Для свободного поиска  песен и  исполнителей  нужно  ввести:
+     **${config.prefix}play [title_music]**
+     * **[title_music]**  - Название  песни,   исполнителя  или  альбома`,
     async execute(DISCORDMessage, DISCORDClient, VKClient) {
         try {
             const command = DISCORDMessage.content.replace(`${config.prefix}${this.name}`, "").replace(/(^\s*)|(\s*)$/g, '');

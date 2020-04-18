@@ -14,7 +14,7 @@ async function PlayListMusic(HTTPClient, FromData, QuantityItem, callback) {
                             name: e[4] + " - " + e[3],
                             body: `${e[1]}_${e[0]}_${e[13].split('//')[1]}_${e[13].split('//')[2].replace('/', "").slice(0, -1)}`,
                             userID: res.payload[1][0].ownerId,
-                            duration: e[15].duration  
+                            duration: e[15].duration
                         });
                     })
                     if (item.length > 0) { callback(item) } else { callback(undefined) }
@@ -47,40 +47,51 @@ async function PlayListMusic(HTTPClient, FromData, QuantityItem, callback) {
 
 async function GetMusic(HTTPClient, ListMusic, callback) {
     try {
-        if (ListMusic.length > 5) {
-            let id = "";
-            for (let a = 0; a < ListMusic.length; a = a + 5) {
-                for (let b = a; b < a + 5; b++) {
-                    id += ListMusic[b].body + ',';
-                }
-                id += ListMusic[a].body + ',';
 
-                await HTTPClient.request('al_audio.php', {
-                    act: 'reload_audio',
-                    al: 1,
-                    ids: id.slice(0, -1)
-                }).then((res) => {
-                    for (let i = a, c = 0; i < a + 5; i++, c++) {
-                        ListMusic[i].link = decode(res.payload[1][0][c][2], 541919523);
-                    }
-                    id = "";
-                })
-            }
-            if (ListMusic.length > 0) { callback({item : ListMusic}) }
-            else { callback(undefined) }
+        let newList = [];
+
+        for (let i = 0; i < ListMusic.length; i += 10) {
+            newList.push(ListMusic.slice(i, i + 10));
         }
+
+        let count = 0;
+
+        await newList.map(async (task, index, array) => {
+
+            let ids = "";
+            task.map((id) => {
+                ids += id.body + ",";
+            })
+
+            await HTTPClient.request('al_audio.php', {
+                act: 'reload_audio',
+                al: 1,
+                ids: ids.slice(0, -1)
+            }).then((res) => {
+
+                for (let i = (10 * index), c = 0; i < (10 * index) + res.payload[1][0].length; c++ , i++) {
+                    ListMusic[i].link = decode(res.payload[1][0][c][2], HTTPClient._vk.session.user_id);
+                }
+
+                count++;
+
+                if (array.length == count) {
+                    if (ListMusic.length > 0) { return callback({ item: ListMusic }) }
+                    else { return callback(undefined) }
+                }
+            })
+        })
+
     } catch { callback(undefined) }
 }
 
-module.exports = {
-    async execute(HTTPClient, FromData, QuantityItem, callback) {
-        try {
-            await PlayListMusic(HTTPClient, FromData, QuantityItem, async (res) => {
-                if (await res != undefined) {
-                    await GetMusic(HTTPClient, res, async (list) => await callback(list))
-                }
-                else { await callback("No access to playlist") }
-            });
-        } catch { callback(undefined) }
-    }
+module.exports = async (HTTPClient, FromData, QuantityItem, callback) => {
+    try {
+        await PlayListMusic(HTTPClient, FromData, QuantityItem, async (res) => {
+            if (await res != undefined) {
+                await GetMusic(HTTPClient, res, async (list) => await callback(list))
+            }
+            else { await callback("No access to playlist") }
+        });
+    } catch { callback(undefined) }
 }

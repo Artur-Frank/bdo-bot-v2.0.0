@@ -2,8 +2,8 @@ const fs = require('fs');
 const config = require("../config.json");
 
 module.exports = {
-    name: 'playlist',
-    description: 'Сохранение, запуск и редактирование плейлистов',
+    name: 'list',
+    description: 'Получить список музыки',
     execute(DISCORDMessage, client) {
         
     },
