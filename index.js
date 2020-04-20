@@ -42,12 +42,6 @@ async function main(vk) {
 			client.user.setActivity(`Black Desert Online`);
 		});
 
-		/*
-			client.on("guildMemberUpdate", (oldMember, newMember) => {
-				client.commands.get("licence").execute(client, oldMember, newMember);
-			})
-		*/
-
 		client.on("message", async message => {
 			if (message.author.bot) return;
 
