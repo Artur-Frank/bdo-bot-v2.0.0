@@ -22,6 +22,9 @@ module.exports = {
             else if (command.indexOf('vk.com') != -1) {
                 music.vk.urlPlay(DISCORDMessage, DISCORDClient, VKClient);
             }
+            else if (command.length > 0) {
+                music.vk.searchPlay(DISCORDMessage, DISCORDClient, VKClient);
+            }
             else {
                 DISCORDMessage.channel.send(`**Команда введена не верно! Справка : ${config.prefix}help**`);
             }

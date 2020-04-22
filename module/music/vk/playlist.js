@@ -22,19 +22,16 @@ async function PlayListMusic(HTTPClient, FromData, QuantityItem, callback) {
                 else { callback(undefined) }
             }
             else {
-                if (res.payload[1][0] != false) {
-                    List = res.payload[1][0].list.slice(0, QuantityItem);
-                    List.map(e => {
-                        var o = e[13].split('//');
-
-                        item.push(new Item(
-                            "reload_audio",
-                            "null",
-                            e[4] + " - " + e[3],
-                            `${e[1]}_${e[0]}_${o[1]}_${o[2].replace('/', "").slice(0, -1)}`,
-                            res.payload[1][0].ownerId,
-                            e[15].duration
-                        ));
+                if (res.payload[1][1] != false) { 
+                    res.payload[1][1].playlistData.list.slice(0, QuantityItem).map(e => {
+                        item.push({
+                            type: "reload_audio",
+                            link: "null",
+                            name: e[4] + " - " + e[3],
+                            body: `${e[1]}_${e[0]}_${e[13].split('//')[1]}_${e[13].split('//')[2].replace('/', "").slice(0, -1)}`,
+                            userID: res.payload[1][0].ownerId,
+                            duration: e[15].duration
+                        });
                     })
                     if (item.length > 0) { callback(item) } else { callback(undefined) }
                 }
@@ -69,7 +66,7 @@ async function GetMusic(HTTPClient, ListMusic, callback) {
                 ids: ids.slice(0, -1)
             }).then((res) => {
 
-                for (let i = (10 * index), c = 0; i < (10 * index) + res.payload[1][0].length; c++ , i++) {
+                for (let i = (10 * index), c = 0; i < (10 * index) + res.payload[1][0].length; c++, i++) {
                     ListMusic[i].link = decode(res.payload[1][0][c][2], HTTPClient._vk.session.user_id);
                 }
 

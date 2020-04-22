@@ -44,5 +44,5 @@ async function Play(message, song) {
         Play(message, message.client.queue.get(message.guild.id).songs[0]);
     })
         .on("error", error => console.error(error));
-    message.client.queue.get(message.guild.id).textChannel.send(`Start playing: **${song.Title}**`);
+    await message.client.queue.get(message.guild.id).textChannel.send(`Start playing: **${song.Title}**`);
 }

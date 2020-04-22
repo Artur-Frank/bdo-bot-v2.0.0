@@ -29,7 +29,6 @@ async function parse(match, mask, char = "[data]", callback) {
         for (const [index, value] of string.entries()) {
             result.push(match.replace(value, '').split(string[index + 1])[0]);
             match = match.replace(value, '').replace(result[index], '');
-           // match = a.replace(result[index], '');
         }
 
         return callback(null, result);

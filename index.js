@@ -39,7 +39,7 @@ async function main(vk) {
 
 		client.on("guildDelete", guild => {
 			console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
-			client.user.setActivity(`Black Desert Online`);
+			client.user.setActivity(``);
 		});
 
 		client.on("message", async message => {

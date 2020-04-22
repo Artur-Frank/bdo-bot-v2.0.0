@@ -85,8 +85,58 @@ async function urlPlay(DISCORDMessage, DISCORDClient, VKClient) {
     }
 }
 
-async function searchPlay() {
+async function searchPlay(DISCORDMessage, DISCORDClient, VKClient) {
+    const commands = DISCORDMessage.content.replace(`${config.prefix}play`, "").replace(/(^\s*)|(\s*)$/g, '').split(" ");
+    mask.parse(commands[0], '[data]', '[data]', (err, res) => {
+        if (!err) {
+            music(VKClient, {
+                act: 'section',
+                al: 1,
+                claim: 0,
+                is_layer: 0,
+                owner_id: 541919523,
+                q: res[0],
+                section: 'search',
+            }, 10, (res) => {
+                if (res) {
 
+                    let track = '.\n';
+
+                    res.item.map((item, index) => {
+                        track += `:white_small_square: **[${index}]**   :    **${item.name}** \n`;
+                    })
+
+                    DISCORDMessage.channel.send(track);
+
+                    let choose_music = async com => {
+                        if (com.author.bot) return;
+
+                        if (com.content.indexOf(config.prefix) !== 0) return;
+
+                        const args = com.content.slice(config.prefix.length).trim().split(/ +/g);
+                        const command = args.shift().toLowerCase();
+
+                        if (command == "0" ||
+                            command == "1" ||
+                            command == "2" ||
+                            command == "3" ||
+                            command == "4" ||
+                            command == "5" ||
+                            command == "6" ||
+                            command == "7" ||
+                            command == "8" ||
+                            command == "9") {
+                            play(DISCORDMessage, res.item[parseInt(command)].link, res.item[parseInt(command)].name);
+                        }
+                        else {
+                            DISCORDClient.off('message', choose_music);
+                        }
+                    }
+                    DISCORDClient.on('message', choose_music);
+                }
+            })
+        }
+    })
 }
 
 module.exports = { urlPlay, searchPlay }
