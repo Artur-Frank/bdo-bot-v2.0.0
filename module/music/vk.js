@@ -134,6 +134,8 @@ async function searchPlay(DISCORDMessage, DISCORDClient, VKClient) {
                                     DISCORDClient.off('message', choose_music);
                             }
                             else {
+                                msg.delete();
+                                com.delete();
                                 DISCORDClient.off('message', choose_music);
                             }
                         }
