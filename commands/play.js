@@ -16,6 +16,7 @@ module.exports = {
     async execute(DISCORDMessage, DISCORDClient, VKClient) {
         try {
             const command = DISCORDMessage.content.replace(`${config.prefix}${this.name}`, "").replace(/(^\s*)|(\s*)$/g, '');
+            DISCORDMessage.delete();
             if (command.indexOf('youtube.com') != -1 || command.indexOf('youtu.be') !== -1) {
                 music.youtube();
             }

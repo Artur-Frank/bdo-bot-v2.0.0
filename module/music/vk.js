@@ -22,8 +22,8 @@ async function urlPlay(DISCORDMessage, DISCORDClient, VKClient) {
                         type: 'playlist'
                     }, 50, (res) => {
                         if (res) {
-                            res.item.map((i) => {
-                                play(DISCORDMessage, i.link, i.name);
+                            res.item.map(async (i) => {
+                                await play(DISCORDMessage, DISCORDClient, i.link, i.name, i.image, i.artist, i.duration);
                             })
                         }
                     })
@@ -47,8 +47,8 @@ async function urlPlay(DISCORDMessage, DISCORDClient, VKClient) {
                         type: 'playlist',
                     }, 50, (res) => {
                         if (res) {
-                            res.item.map((i) => {
-                                play(DISCORDMessage, i.link, i.name);
+                            res.item.map(async (i) => {
+                                await play(DISCORDMessage, DISCORDClient, i.link, i.name, i.image, i.artist, i.duration);
                             })
                         }
                     })
@@ -72,8 +72,8 @@ async function urlPlay(DISCORDMessage, DISCORDClient, VKClient) {
                         type: 'playlist',
                     }, 50, (res) => {
                         if (res) {
-                            res.item.map((i) => {
-                                play(DISCORDMessage, i.link, i.name);
+                            res.item.map(async (i) => {
+                                await play(DISCORDMessage, DISCORDClient, i.link, i.name, i.image, i.artist, i.duration);
                             })
                         }
                     })
@@ -97,42 +97,50 @@ async function searchPlay(DISCORDMessage, DISCORDClient, VKClient) {
                 owner_id: 541919523,
                 q: res[0],
                 section: 'search',
-            }, 10, (res) => {
+            }, 10, async (res) => {
                 if (res) {
+                  await new Promise(async (resolve, reject) => {
+                    resolve(res.item.map((item, index) => {
+                        return `:white_small_square: **[${index}]**   :    **${item.name}** \n`;
+                    }))}).then(async (list) => {
+                        const msg = await DISCORDMessage.channel.send('.\n' + list);
 
-                    let track = '.\n';
+                        let choose_music = async com => {
+                            if (com.author.bot) return;
 
-                    res.item.map((item, index) => {
-                        track += `:white_small_square: **[${index}]**   :    **${item.name}** \n`;
+                            if (com.content.indexOf(config.prefix) !== 0) return;
+
+                            const args = com.content.slice(config.prefix.length).trim().split(/ +/g);
+                            const command = args.shift().toLowerCase();
+
+                            if (command == "0" ||
+                                command == "1" ||
+                                command == "2" ||
+                                command == "3" ||
+                                command == "4" ||
+                                command == "5" ||
+                                command == "6" ||
+                                command == "7" ||
+                                command == "8" ||
+                                command == "9") {
+                                await play(DISCORDMessage, DISCORDClient,
+                                    res.item[parseInt(command)].link,
+                                    res.item[parseInt(command)].name,
+                                    res.item[parseInt(command)].image,
+                                    res.item[parseInt(command)].artist,
+                                    res.item[parseInt(command)].duration);
+                                    msg.delete();
+                                    com.delete();
+                                    DISCORDClient.off('message', choose_music);
+                            }
+                            else {
+                                DISCORDClient.off('message', choose_music);
+                            }
+                        }
+                        DISCORDClient.on('message', choose_music);
                     })
 
-                    DISCORDMessage.channel.send(track);
 
-                    let choose_music = async com => {
-                        if (com.author.bot) return;
-
-                        if (com.content.indexOf(config.prefix) !== 0) return;
-
-                        const args = com.content.slice(config.prefix.length).trim().split(/ +/g);
-                        const command = args.shift().toLowerCase();
-
-                        if (command == "0" ||
-                            command == "1" ||
-                            command == "2" ||
-                            command == "3" ||
-                            command == "4" ||
-                            command == "5" ||
-                            command == "6" ||
-                            command == "7" ||
-                            command == "8" ||
-                            command == "9") {
-                            play(DISCORDMessage, res.item[parseInt(command)].link, res.item[parseInt(command)].name);
-                        }
-                        else {
-                            DISCORDClient.off('message', choose_music);
-                        }
-                    }
-                    DISCORDClient.on('message', choose_music);
                 }
             })
         }

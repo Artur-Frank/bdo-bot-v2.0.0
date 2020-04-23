@@ -4,14 +4,18 @@ async function PlayListMusic(HTTPClient, FromData, QuantityItem, callback) {
     try {
         let item = [];
 
-        await HTTPClient.request('al_audio.php?act=load_section', FromData).then((res) => {
+        await HTTPClient.request('al_audio.php', FromData).then((res) => {
             if (typeof res.payload[1][0] != 'string') {
                 if (res.payload[1][0] != false) {
                     res.payload[1][0].list.slice(0, QuantityItem).map(e => {
+                        let a = 0;
+                        if (e[17] != "") { a = e[17][0].id }
                         item.push({
                             type: "reload_audio",
+                            artist: a,
                             link: "null",
                             name: e[4] + " - " + e[3],
+                            image: e[14].split(",")[0],
                             body: `${e[1]}_${e[0]}_${e[13].split('//')[1]}_${e[13].split('//')[2].replace('/', "").slice(0, -1)}`,
                             userID: res.payload[1][0].ownerId,
                             duration: e[15].duration
@@ -22,12 +26,16 @@ async function PlayListMusic(HTTPClient, FromData, QuantityItem, callback) {
                 else { callback(undefined) }
             }
             else {
-                if (res.payload[1][1] != false) { 
+                if (res.payload[1][1] != false) {
                     res.payload[1][1].playlistData.list.slice(0, QuantityItem).map(e => {
+                        let a = 0;
+                        if (e[17][0].id != undefined) { a = e[17][0].id }
                         item.push({
                             type: "reload_audio",
+                            artist: a,
                             link: "null",
                             name: e[4] + " - " + e[3],
+                            image: e[14].split(",")[0],
                             body: `${e[1]}_${e[0]}_${e[13].split('//')[1]}_${e[13].split('//')[2].replace('/', "").slice(0, -1)}`,
                             userID: res.payload[1][0].ownerId,
                             duration: e[15].duration

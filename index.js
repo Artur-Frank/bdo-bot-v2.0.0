@@ -24,8 +24,10 @@ for (const file of commandFiles) {
 
 async function main(vk) {
 	vk.http.loginByForm({
-		cookies: __dirname + "\\source\\cookies\\my-cookies.json"
+		cookies: __dirname + "\\cookies\\my-cookies.json"
 	}).then(async (HTTPClient) => {
+
+		console.log(`%cLogin successful ${vk.session.first_name} ${vk.session.last_name} [${vk.session.user_id}]`, "color: orange");
 
 		client.on("ready", () => {
 			console.log(`%cBot has started, with ${client.users.cache.size} users, in ${client.channels.cache.size} channels of ${client.guilds.cache.size} guilds.`, 'color: orange');
@@ -68,6 +70,7 @@ async function logInWith2Auth(params) {
 		function relogIn(_2faCode = "") {
 			if (_2faCode) params.code = _2faCode
 			easyvk(params).then(main).catch((err) => {
+				console.log(`%c${err.error_msg}`, "color: red")
 				if (!err.easyvk_error) {
 					if (err.error_code == "need_validation") {
 						_2faNeed({
@@ -85,7 +88,7 @@ async function logInWith2Auth(params) {
 logInWith2Auth({
 	username: config.username,
 	password: config.password,
-	sessionFile: path.join(__dirname, '\\source\\cookies\\.my-session'),
+	sessionFile: path.join(__dirname, '\\cookies\\.my-session'),
 	reauth: true,
 }).then(({ err: error, relogIn }) => {
 	console.log(error.validation_type);

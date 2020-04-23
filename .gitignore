@@ -1,6 +1,4 @@
 node_modules
 config.json
 package-lock.json
-source/cookies/*
-source/img/*
-source/templates/*
+cookies/*
