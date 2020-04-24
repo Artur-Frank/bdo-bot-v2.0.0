@@ -31,17 +31,17 @@ async function main(vk) {
 
 		client.on("ready", () => {
 			console.log(`%cBot has started, with ${client.users.cache.size} users, in ${client.channels.cache.size} channels of ${client.guilds.cache.size} guilds.`, 'color: orange');
-			client.user.setActivity(`Black Desert Online`);
+			
+			client.user.setUsername('eMUSIC');
+			client.user.setActivity('музыку', { type: 'LISTENING' });
 		});
 
 		client.on("guildCreate", guild => {
 			console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
-			client.user.setActivity(`Black Desert Online`);
 		});
 
 		client.on("guildDelete", guild => {
 			console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
-			client.user.setActivity(``);
 		});
 
 		client.on("message", async message => {
@@ -68,8 +68,8 @@ async function main(vk) {
 			if (messageReaction.emoji.identifier == "%E2%AC%85%EF%B8%8F") {  // replay
 				client.commands.get("replay").execute(messageReaction.message, false);
 			}
-			else if (messageReaction.emoji.identifier == "%E2%8F%B8%EF%B8%8F") { //pause//play 
-				client.commands.get("replay").execute(messageReaction.message, false);
+			else if (messageReaction.emoji.identifier == "%E2%8F%AF%EF%B8%8F") { //pause//play 
+				client.commands.get("pause").execute(messageReaction.message, false);
 			}
 			else if (messageReaction.emoji.identifier == "%E2%9E%A1%EF%B8%8F") {  // skip
 				client.commands.get("skip").execute(messageReaction.message, false);
@@ -86,8 +86,8 @@ async function main(vk) {
 			if (messageReaction.emoji.identifier == "%E2%AC%85%EF%B8%8F") {  // replay
 				client.commands.get("replay").execute(messageReaction.message, false);
 			}
-			else if (messageReaction.emoji.identifier == "%E2%8F%B8%EF%B8%8F") { //pause//play 
-				client.commands.get("replay").execute(messageReaction.message, false);
+			else if (messageReaction.emoji.identifier == "%E2%8F%AF%EF%B8%8F") { //pause//play 
+				client.commands.get("pause").execute(messageReaction.message, false);
 			}
 			else if (messageReaction.emoji.identifier == "%E2%9E%A1%EF%B8%8F") {  // skip
 				client.commands.get("skip").execute(messageReaction.message, false);

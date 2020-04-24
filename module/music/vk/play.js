@@ -31,7 +31,7 @@ module.exports = async (DISCORDMessage, DISCORDClient, url, title, img_url, arti
             DISCORDMessage.client.queue.get(DISCORDMessage.guild.id).player = await DISCORDMessage.channel.send(DISCORDClient.embed);
 
             DISCORDMessage.client.queue.get(DISCORDMessage.guild.id).react_back = DISCORDMessage.client.queue.get(DISCORDMessage.guild.id).player.react('⬅️')
-            .then(() => DISCORDMessage.client.queue.get(DISCORDMessage.guild.id).react_play_pause = DISCORDMessage.client.queue.get(DISCORDMessage.guild.id).player.react('⏸️'))     
+            .then(() => DISCORDMessage.client.queue.get(DISCORDMessage.guild.id).react_play_pause = DISCORDMessage.client.queue.get(DISCORDMessage.guild.id).player.react('⏯️'))     
             .then(() => DISCORDMessage.client.queue.get(DISCORDMessage.guild.id).react_next = DISCORDMessage.client.queue.get(DISCORDMessage.guild.id).player.react('➡️'))
             .then(() => DISCORDMessage.client.queue.get(DISCORDMessage.guild.id).react_stop = DISCORDMessage.client.queue.get(DISCORDMessage.guild.id).player.react('⏹️'))
 
