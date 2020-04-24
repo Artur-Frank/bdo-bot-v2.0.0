@@ -23,6 +23,9 @@ module.exports = {
             else if (command.indexOf('vk.com') != -1) {
                 music.vk.urlPlay(DISCORDMessage, DISCORDClient, VKClient);
             }
+            else if (command.indexOf('/list' != -1)) {
+                
+            }
             else if (command.length > 0) {
                 music.vk.searchPlay(DISCORDMessage, DISCORDClient, VKClient);
             }

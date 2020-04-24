@@ -61,8 +61,59 @@ async function main(vk) {
 			}
 
 		})
+
+		client.on('messageReactionAdd', async (messageReaction, user) => {
+			if (user.bot) return;
+
+			if (messageReaction.emoji.identifier == "%E2%AC%85%EF%B8%8F") {  // replay
+				client.commands.get("replay").execute(messageReaction.message, false);
+			}
+			else if (messageReaction.emoji.identifier == "%E2%8F%B8%EF%B8%8F") { //pause//play 
+				client.commands.get("replay").execute(messageReaction.message, false);
+			}
+			else if (messageReaction.emoji.identifier == "%E2%9E%A1%EF%B8%8F") {  // skip
+				client.commands.get("skip").execute(messageReaction.message, false);
+			}
+			else if (messageReaction.emoji.identifier == "%E2%8F%B9%EF%B8%8F") {  // stop
+				client.commands.get("stop").execute(messageReaction.message, false);
+			}
+			else {messageReaction.remove();}
+		})
+
+		client.on('messageReactionRemove', async (messageReaction, user) => {
+			if (user.bot) return;
+
+			if (messageReaction.emoji.identifier == "%E2%AC%85%EF%B8%8F") {  // replay
+				client.commands.get("replay").execute(messageReaction.message, false);
+			}
+			else if (messageReaction.emoji.identifier == "%E2%8F%B8%EF%B8%8F") { //pause//play 
+				client.commands.get("replay").execute(messageReaction.message, false);
+			}
+			else if (messageReaction.emoji.identifier == "%E2%9E%A1%EF%B8%8F") {  // skip
+				client.commands.get("skip").execute(messageReaction.message, false);
+			}
+			else if (messageReaction.emoji.identifier == "%E2%8F%B9%EF%B8%8F") {  // stop
+				client.commands.get("stop").execute(messageReaction.message, false);
+			}
+		})
+
 		client.login(config.token);
 	})
+}
+
+const captchaHandler = ({ captcha_sid, captcha_img, resolve: solve, vk }) => {
+
+	rl.question(`Введите капчу для картинки ${captcha_img} `, (key) => {
+		solve(key).then(() => {
+			console.log('Капча решена корректно!')
+		}).catch(({ err, reCall: tryNewCall }) => {
+			console.log('Капче не решена!!!\nПробуем занова')
+
+			tryNewCall()
+		})
+
+	})
+
 }
 
 async function logInWith2Auth(params) {
@@ -88,6 +139,7 @@ async function logInWith2Auth(params) {
 logInWith2Auth({
 	username: config.username,
 	password: config.password,
+	captchaHandler: captchaHandler,
 	sessionFile: path.join(__dirname, '\\cookies\\.my-session'),
 	reauth: true,
 }).then(({ err: error, relogIn }) => {
@@ -98,3 +150,4 @@ logInWith2Auth({
 		rl.close();
 	});
 })
+
