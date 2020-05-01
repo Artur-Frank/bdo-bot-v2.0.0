@@ -1,13 +1,6 @@
 let he = require('he');
 
 module.exports = async (DISCORDMessage, DISCORDClient, url, title, img_url, artist, duration) => await new Promise(async (resolve, reject) => {
-    if (!DISCORDMessage.member.voice.channel)
-        return DISCORDMessage.channel.send("You need to be in a voice channel to play music!");
-    if (!DISCORDMessage.member.voice.channel.permissionsFor(DISCORDMessage.client.user).has("CONNECT") ||
-        !DISCORDMessage.member.voice.channel.permissionsFor(DISCORDMessage.client.user).has("SPEAK")) {
-        return DISCORDMessage.channel.send("I need the permissions to join and speak in your voice channel!");
-    }
-
     if (!DISCORDMessage.client.queue.get(DISCORDMessage.guild.id)) {
 
         DISCORDMessage.client.queue.set(DISCORDMessage.guild.id, {

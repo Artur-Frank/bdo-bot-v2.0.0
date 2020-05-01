@@ -59,10 +59,7 @@ async function GetMusic(HTTPClient, ListMusic, callback) {
             newList.push(ListMusic.slice(i, i + 10));
         }
 
-        let count = 0;
-
-        await newList.map(async (task, index, array) => {
-
+        await Promise.all(newList.map(async (task, index) => {
             let ids = "";
             task.map((id) => {
                 ids += id.body + ",";
@@ -73,20 +70,15 @@ async function GetMusic(HTTPClient, ListMusic, callback) {
                 al: 1,
                 ids: ids.slice(0, -1)
             }).then((res) => {
-
                 for (let i = (10 * index), c = 0; i < (10 * index) + res.payload[1][0].length; c++, i++) {
                     ListMusic[i].link = decode(res.payload[1][0][c][2], HTTPClient._vk.session.user_id);
                 }
-
-                count++;
-
-                if (array.length == count) {
-                    if (ListMusic.length > 0) { return callback({ item: ListMusic }) }
-                    else { return callback(undefined) }
-                }
             })
-        })
-
+        }))
+            .then(() => {
+                if (ListMusic.length > 0) { return callback({ item: ListMusic }) }
+                else { return callback(undefined) }
+            })
     } catch { callback(undefined) }
 }
 

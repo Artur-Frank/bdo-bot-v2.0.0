@@ -4,6 +4,16 @@ const mask = require('../mask');
 const config = require('../../config.json');
 
 
+function Connect(DISCORDMessage) {
+    if (!DISCORDMessage.member.voice.channel) { DISCORDMessage.channel.send("Вы должны быть в голосовом канале, чтобы играть музыку!"); return false; }
+    else if (!DISCORDMessage.member.voice.channel.permissionsFor(DISCORDMessage.client.user).has("CONNECT") ||
+        !DISCORDMessage.member.voice.channel.permissionsFor(DISCORDMessage.client.user).has("SPEAK")) {
+        { DISCORDMessage.channel.send("Мне нужны разрешения, чтобы присоединиться и говорить в вашем голосовом канале!"); return false; }
+    }
+    else { return true; }
+}
+
+
 async function urlPlay(DISCORDMessage, DISCORDClient, VKClient) {
     try {
         const commands = DISCORDMessage.content.replace(`${config.prefix}play`, "").replace(/(^\s*)|(\s*)$/g, '').split(" ");
@@ -22,9 +32,11 @@ async function urlPlay(DISCORDMessage, DISCORDClient, VKClient) {
                         type: 'playlist'
                     }, 50, (res) => {
                         if (res) {
-                            res.item.map(async (i) => {
-                                await play(DISCORDMessage, DISCORDClient, i.link, i.name, i.image, i.artist, i.duration);
-                            })
+                            if (Connect(DISCORDMessage)) {
+                                res.item.map(async (i) => {
+                                    await play(DISCORDMessage, DISCORDClient, i.link, i.name, i.image, i.artist, i.duration);
+                                })
+                            }
                         }
                     })
                 }
@@ -47,9 +59,11 @@ async function urlPlay(DISCORDMessage, DISCORDClient, VKClient) {
                         type: 'playlist',
                     }, 50, (res) => {
                         if (res) {
-                            res.item.map(async (i) => {
-                                await play(DISCORDMessage, DISCORDClient, i.link, i.name, i.image, i.artist, i.duration);
-                            })
+                            if (Connect(DISCORDMessage)) {
+                                res.item.map(async (i) => {
+                                    await play(DISCORDMessage, DISCORDClient, i.link, i.name, i.image, i.artist, i.duration);
+                                })
+                            }
                         }
                     })
                 }
@@ -72,9 +86,11 @@ async function urlPlay(DISCORDMessage, DISCORDClient, VKClient) {
                         type: 'playlist',
                     }, 50, (res) => {
                         if (res) {
-                            res.item.map(async (i) => {
-                                await play(DISCORDMessage, DISCORDClient, i.link, i.name, i.image, i.artist, i.duration);
-                            })
+                            if (Connect(DISCORDMessage)) {
+                                res.item.map(async (i) => {
+                                    await play(DISCORDMessage, DISCORDClient, i.link, i.name, i.image, i.artist, i.duration);
+                                })
+                            }
                         }
                     })
                 }
@@ -99,10 +115,11 @@ async function searchPlay(DISCORDMessage, DISCORDClient, VKClient) {
                 section: 'search',
             }, 10, async (res) => {
                 if (res) {
-                  await new Promise(async (resolve, reject) => {
-                    resolve(res.item.map((item, index) => {
-                        return `:white_small_square: **[${index}]**   :    **${item.name}** \n`;
-                    }))}).then(async (list) => {
+                    await new Promise(async (resolve, reject) => {
+                        resolve(res.item.map((item, index) => {
+                            return `:white_small_square: **[${index}]**   :    **${item.name}** \n`;
+                        }))
+                    }).then(async (list) => {
                         const msg = await DISCORDMessage.channel.send('.\n' + list);
 
                         let choose_music = async com => {
@@ -123,15 +140,17 @@ async function searchPlay(DISCORDMessage, DISCORDClient, VKClient) {
                                 command == "7" ||
                                 command == "8" ||
                                 command == "9") {
-                                await play(DISCORDMessage, DISCORDClient,
-                                    res.item[parseInt(command)].link,
-                                    res.item[parseInt(command)].name,
-                                    res.item[parseInt(command)].image,
-                                    res.item[parseInt(command)].artist,
-                                    res.item[parseInt(command)].duration);
-                                    msg.delete();
-                                    com.delete();
-                                    DISCORDClient.off('message', choose_music);
+                                if (Connect(DISCORDMessage)) {
+                                    await play(DISCORDMessage, DISCORDClient,
+                                        res.item[parseInt(command)].link,
+                                        res.item[parseInt(command)].name,
+                                        res.item[parseInt(command)].image,
+                                        res.item[parseInt(command)].artist,
+                                        res.item[parseInt(command)].duration);
+                                }
+                                msg.delete();
+                                com.delete();
+                                DISCORDClient.off('message', choose_music);
                             }
                             else {
                                 msg.delete();
@@ -141,8 +160,6 @@ async function searchPlay(DISCORDMessage, DISCORDClient, VKClient) {
                         }
                         DISCORDClient.on('message', choose_music);
                     })
-
-
                 }
             })
         }
